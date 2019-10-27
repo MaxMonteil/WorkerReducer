@@ -29,6 +29,9 @@ reducer.o: reducer.c
 proc_utils.o: proc_utils.c proc_utils.h structs.h
 	$(CC) $(CFLAGS) $<
 
+wipe:
+	@rm -rf *.o $(OUTPUT) output*
+
 .PHONY: clean
 clean:
-	@rm -rf *.o $(OUTPUT) output*
+	@rm -rf output*

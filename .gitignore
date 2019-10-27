@@ -3,4 +3,5 @@ bin/
 tags
 input.txt
 *.o
+*.out
 output*

@@ -1,3 +1,4 @@
 .ccls-cache/
 tags
 input.txt
+*.o

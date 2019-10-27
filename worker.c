@@ -21,8 +21,8 @@ int main (int argc, char **argv) {
     }
 
     // convert proc number from args to number
-    long proc_num = strtol(argv[1], NULL, 10);
-    int shmem_id = shmget(ftok(IN_NAME, (int) proc_num), sizeof(count_result), 0666);
+    long self_proc_num = strtol(argv[1], NULL, 10);
+    int shmem_id = shmget(ftok(IN_NAME, (int) self_proc_num), sizeof(count_result), 0666);
     count_result *result = (count_result *) shmat(shmem_id, NULL, 0);
 
     int c, i = 0;

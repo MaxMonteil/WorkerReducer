@@ -1,22 +1,22 @@
 CC = gcc
 CFLAGS = -Wall -c
 LFLAGS = -Wall -o
-BIN_DIR = ./bin/
 MAIN_OUTPUT = main
 WORKER_OUTPUT = worker
 REDUCER_OUTPUT = reducer
+OUT_EXT = .out
 OUTPUT = $(MAIN_OUTPUT) $(WORKER_OUTPUT) $(REDUCER_OUTPUT)
 
 run: $(OUTPUT)
 
-main: WorkerReducer.o proc_utils.o
-	$(CC) $(LFLAGS) $(BIN_DIR)$(MAIN_OUTPUT) $^
+$(MAIN_OUTPUT): WorkerReducer.o proc_utils.o
+	$(CC) $(LFLAGS) $@$(OUT_EXT) $^
 
-worker: worker.o
-	$(CC) $(LFLAGS) $(BIN_DIR)$(WORKER_OUTPUT) $^
+$(WORKER_OUTPUT): worker.o
+	$(CC) $(LFLAGS) $@$(OUT_EXT) $^
 
-reducer: reducer.o
-	$(CC) $(LFLAGS) $(BIN_DIR)$(REDUCER_OUTPUT) $^
+$(REDUCER_OUTPUT): reducer.o
+	$(CC) $(LFLAGS) $@$(OUT_EXT) $^
 
 WorkerReducer.o: WorkerReducer.c proc_utils.h definitions.h
 	$(CC) $(CFLAGS) $<
@@ -31,7 +31,7 @@ proc_utils.o: proc_utils.c proc_utils.h structs.h
 	$(CC) $(CFLAGS) $<
 
 wipe:
-	@rm -rf *.o $(BIN_DIR)* output*
+	@rm -rf *.o *$(OUT_EXT) output*
 
 .PHONY: clean
 clean:

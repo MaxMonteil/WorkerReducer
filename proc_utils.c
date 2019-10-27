@@ -6,8 +6,9 @@
 #include "proc_utils.h"
 
 void create_n_shmem (int n, char *path, long *shmem_ids) {
-    for (int i = 0; i < n; ++i)
+    for (int i = 0; i < n; ++i) {
         *(shmem_ids + i) = shmget(ftok(path, i), sizeof(count_result), IPC_CREAT | 0666);
+    }
 }
 
 void attach_n_shmem (int n, long *shmem_ids, count_result **results) {
@@ -25,7 +26,7 @@ void remove_n_shmem (int n, long* shmem_ids) {
         shmctl(*(shmem_ids + i), IPC_RMID, NULL);
 }
 
-void create_n_procs (int n, pid_t *container, char **args) {
+void create_n_procs (int n, pid_t *container, char *path, char *name) {
     for (int i = 0; i < n; ++i) {
         if ((*(container + i) = fork()) == -1) {
             printf("Error in fork\n");
@@ -33,8 +34,9 @@ void create_n_procs (int n, pid_t *container, char **args) {
         }
 
         if (*(container + i) == 0) {
-            snprintf(args[2], 12, "%d", i); // pass the process count
-            execvp(args[0], args + 1);
+            char proc_num[12];
+            snprintf(proc_num, 12, "%d", i); // pass the process count
+            execlp(path, name, proc_num, NULL);
             exit(0);
         }
     }

@@ -42,11 +42,8 @@ int main (int argc, char **argv) {
         // create N processes
         pid_t worker_pids[split], reducer_pids[REDUCER_AMNT];
 
-        char *worker_args[] = { "./worker", "worker", "0" };
-        char *reducer_args[] = { "./reducer", "reducer", "0" };
-
-        create_n_procs(split, worker_pids, worker_args);
-        create_n_procs(REDUCER_AMNT, reducer_pids, reducer_args);
+        create_n_procs(split, worker_pids, "./worker", "worker");
+        create_n_procs(REDUCER_AMNT, reducer_pids, "./reducer", "reducer");
 
         for (i = 0; i < split; i++) waitpid(worker_pids[i], NULL, 0);
         for (i = 0; i < REDUCER_AMNT; i++) waitpid(reducer_pids[i], NULL, 0);

@@ -14,14 +14,15 @@ int main (int argc, char **argv) {
     char FMT_OUT_NAME[FMT_OUT_NAME_LEN];
     FILE *fp;
 
-    snprintf(FMT_OUT_NAME, FMT_OUT_NAME_LEN, "%s%s", OUT_NAME, argv[2]);
+    snprintf(FMT_OUT_NAME, FMT_OUT_NAME_LEN, "%s%s", OUT_NAME, argv[1]);
     if ((fp = fopen(FMT_OUT_NAME, "r")) == NULL) {
         printf("Unable to open file %s\n", FMT_OUT_NAME);
         exit(1);
     }
 
-    //                                  first char of string converted to int
-    int shmem_id = shmget(ftok(IN_NAME, **(argv + 2) - '0'), sizeof(count_result), 0666);
+    // convert proc number from args to number
+    long proc_num = strtol(argv[1], NULL, 10);
+    int shmem_id = shmget(ftok(IN_NAME, (int) proc_num), sizeof(count_result), 0666);
     count_result *result = (count_result *) shmat(shmem_id, NULL, 0);
 
     int c, i = 0;

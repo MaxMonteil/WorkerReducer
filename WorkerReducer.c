@@ -13,14 +13,14 @@
 int file_len (char *file_name);
 
 int main (int argc, char **argv) {
-    int i, split = 4;
+    int i, proc_amnt = 4;
     pid_t pid;
 
     // cast command line arg as integer
     char *p;
     errno = 0;
     if (argc > 1) {
-        split = strtol(argv[1], &p, 10);
+        proc_amnt = strtol(argv[1], &p, 10);
         if (*p != '\0' || errno != 0)
             return 1;
     }
@@ -33,27 +33,26 @@ int main (int argc, char **argv) {
     if (pid > 0) { // parent process
         waitpid(pid, NULL, 0); // wait for split to be done
 
-        long shmem_ids[split];
-        create_n_shmem(split, IN_NAME, shmem_ids);
+        long shmem_ids[proc_amnt];
+        create_n_shmem(proc_amnt, IN_NAME, shmem_ids, IPC_CREAT | 0666);
 
-        count_result *results[split];
-        attach_n_shmem(split, shmem_ids, results);
+        // create N workers
+        pid_t worker_pids[proc_amnt];
+        create_n_workers(proc_amnt, worker_pids, "./worker.out", "worker");
 
-        // create N processes
-        pid_t worker_pids[split], reducer_pids[REDUCER_AMNT];
+        // create 3 reducers
+        pid_t reducer_pids[REDUCER_AMNT];
+        char *reducer_args[3] = { "./reducer.out", "reducer", argv[1] };
+        create_n_reducers(REDUCER_AMNT, reducer_pids, reducer_args);
 
-        create_n_procs(split, worker_pids, "./worker", "worker");
-        create_n_procs(REDUCER_AMNT, reducer_pids, "./reducer", "reducer");
-
-        for (i = 0; i < split; i++) waitpid(worker_pids[i], NULL, 0);
+        for (i = 0; i < proc_amnt; i++) waitpid(worker_pids[i], NULL, 0);
         for (i = 0; i < REDUCER_AMNT; i++) waitpid(reducer_pids[i], NULL, 0);
 
-        detach_n_shmem(split, results);
-        remove_n_shmem(split, shmem_ids);
+        remove_n_shmem(proc_amnt, shmem_ids);
         exit(0);
     } else { // split the text file
         char part_len_str[12];
-        snprintf(part_len_str, 12, "%d", (file_len(IN_NAME) / split));
+        snprintf(part_len_str, 12, "%d", (file_len(IN_NAME) / proc_amnt));
         execlp("split", "split", "-l", part_len_str, "-a", "1", "-d", IN_NAME, OUT_NAME, (char *) NULL);
         exit(0);
     }

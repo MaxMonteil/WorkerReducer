@@ -15,7 +15,7 @@ $(MAIN_OUTPUT): WorkerReducer.o proc_utils.o
 $(WORKER_OUTPUT): worker.o
 	$(CC) $(LFLAGS) $@$(OUT_EXT) $^
 
-$(REDUCER_OUTPUT): reducer.o
+$(REDUCER_OUTPUT): reducer.o proc_utils.o
 	$(CC) $(LFLAGS) $@$(OUT_EXT) $^
 
 WorkerReducer.o: WorkerReducer.c proc_utils.h definitions.h
@@ -24,7 +24,7 @@ WorkerReducer.o: WorkerReducer.c proc_utils.h definitions.h
 worker.o: worker.c structs.h definitions.h
 	$(CC) $(CFLAGS) $<
 
-reducer.o: reducer.c
+reducer.o: reducer.c proc_utils.h definitions.h
 	$(CC) $(CFLAGS) $<
 
 proc_utils.o: proc_utils.c proc_utils.h structs.h

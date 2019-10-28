@@ -1,38 +1,38 @@
-CC = gcc
-CFLAGS = -Wall -c
-LFLAGS = -Wall -o
-MAIN_OUTPUT = main
-WORKER_OUTPUT = worker
-REDUCER_OUTPUT = reducer
-OUT_EXT = .out
-OUTPUT = $(MAIN_OUTPUT) $(WORKER_OUTPUT) $(REDUCER_OUTPUT)
+CC=gcc
+CFLAGS=-I. -Wall
 
-run: $(OUTPUT)
+MAIN_DEPS = main.c main.h $(PROC_DEPS)
+WORKER_DEPS = worker.c worker.h structs.h
+REDUCER_DEPS = reducer.c reducer.h $(PROC_DEPS)
+PROC_DEPS =  proc_utils.c proc_utils.h definitions.h
 
-$(MAIN_OUTPUT): WorkerReducer.o proc_utils.o
-	$(CC) $(LFLAGS) $@$(OUT_EXT) $^
+run: main worker reducer
 
-$(WORKER_OUTPUT): worker.o
-	$(CC) $(LFLAGS) $@$(OUT_EXT) $^
+main: main.o proc_utils.o
+	$(CC) -o $@ $^ $(CFLAGS)
 
-$(REDUCER_OUTPUT): reducer.o proc_utils.o
-	$(CC) $(LFLAGS) $@$(OUT_EXT) $^
+main.o: $(MAIN_DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
-WorkerReducer.o: WorkerReducer.c proc_utils.h definitions.h
-	$(CC) $(CFLAGS) $<
+worker: worker.o
+	$(CC) -o $@ $^ $(CFLAGS)
 
-worker.o: worker.c structs.h definitions.h
-	$(CC) $(CFLAGS) $<
+worker.o: $(WORKER_DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
-reducer.o: reducer.c proc_utils.h definitions.h
-	$(CC) $(CFLAGS) $<
+reducer: reducer.o proc_utils.o
+	$(CC) -o $@ $^ $(CFLAGS)
 
-proc_utils.o: proc_utils.c proc_utils.h structs.h
-	$(CC) $(CFLAGS) $<
+reducer.o: $(REDUCER_DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
+proc_utils.o: $(PROC_DEPS) structs.h
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+.PHONY: wipe
 wipe:
-	@rm -rf *.o *$(OUT_EXT) output*
+	@rm -f *.o main worker reducer output*
 
 .PHONY: clean
 clean:
-	@rm -rf output*
+	@rm -f output*

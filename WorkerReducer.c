@@ -42,8 +42,10 @@ int main (int argc, char **argv) {
 
         // create 3 reducers
         pid_t reducer_pids[REDUCER_AMNT];
-        char *reducer_args[3] = { "./reducer.out", "reducer", argv[1] };
-        create_n_reducers(REDUCER_AMNT, reducer_pids, reducer_args);
+        char proc_amnt_str[12];
+        char *targets[REDUCER_AMNT] = { "CMPS", "CCE", "ECE" };
+        snprintf(proc_amnt_str, 12, "%d", proc_amnt);
+        create_n_reducers(REDUCER_AMNT, reducer_pids, "./reducer.out", "reducer", proc_amnt_str, targets);
 
         for (i = 0; i < proc_amnt; i++) waitpid(worker_pids[i], NULL, 0);
         for (i = 0; i < REDUCER_AMNT; i++) waitpid(reducer_pids[i], NULL, 0);

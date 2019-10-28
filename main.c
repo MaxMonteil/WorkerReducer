@@ -5,12 +5,7 @@
 #include <stdio.h>
 #include <errno.h>
 
-#include "proc_utils.h"
-#include "definitions.h"
-
-#define REDUCER_AMNT 3
-
-int file_len (char *file_name);
+#include "WorkerReducer.h"
 
 int main (int argc, char **argv) {
     int i, proc_amnt = 4;

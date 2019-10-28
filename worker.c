@@ -1,13 +1,12 @@
+#include "worker.h"
+
 #include <sys/shm.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
 
-#include "structs.h"
 #include "definitions.h"
-
-int compare (char *word, char **strings, count_result *result);
 
 int main (int argc, char **argv) {
     char *strings[] = { "CMPS", "CCE", "ECE" };

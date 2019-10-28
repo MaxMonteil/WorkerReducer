@@ -1,9 +1,9 @@
+#include "proc_utils.h"
+
 #include <sys/shm.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-#include "proc_utils.h"
 
 void create_n_shmem (int n, char *path, long *shmem_ids, int flag) {
     for (int i = 0; i < n; ++i) {

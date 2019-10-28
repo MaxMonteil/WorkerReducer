@@ -1,10 +1,9 @@
+#include "reducer.h"
+
 #include <sys/shm.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-#include "proc_utils.h"
-#include "definitions.h"
 
 int main (int argc, char **argv) {
     long proc_amnt = strtol(argv[1], NULL, 10);

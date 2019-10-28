@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <errno.h>
 
-#include "WorkerReducer.h"
+#include "main.h"
 
 int main (int argc, char **argv) {
     int i, proc_amnt = 4;

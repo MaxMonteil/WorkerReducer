@@ -33,14 +33,14 @@ int main (int argc, char **argv) {
 
         // create N workers
         pid_t worker_pids[proc_amnt];
-        create_n_workers(proc_amnt, worker_pids, "./worker.out", "worker");
+        create_n_workers(proc_amnt, worker_pids, "./worker", "worker");
 
         // create 3 reducers
         pid_t reducer_pids[REDUCER_AMNT];
         char proc_amnt_str[12];
         char *targets[REDUCER_AMNT] = { "CMPS", "CCE", "ECE" };
         snprintf(proc_amnt_str, 12, "%d", proc_amnt);
-        create_n_reducers(REDUCER_AMNT, reducer_pids, "./reducer.out", "reducer", proc_amnt_str, targets);
+        create_n_reducers(REDUCER_AMNT, reducer_pids, "./reducer", "reducer", proc_amnt_str, targets);
 
         for (i = 0; i < proc_amnt; i++) waitpid(worker_pids[i], NULL, 0);
         for (i = 0; i < REDUCER_AMNT; i++) waitpid(reducer_pids[i], NULL, 0);

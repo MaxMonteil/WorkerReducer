@@ -2,6 +2,7 @@
 #define _PROC_UTILS_H_INCLUDED
 
 #include <sys/types.h>
+#include <pthread.h>
 #include "structs.h"
 #include "definitions.h"
 
@@ -11,5 +12,7 @@ void detach_n_shmem (int, count_result**);
 void remove_n_shmem (int, long*);
 void create_n_workers (int, pid_t*, char*, char*);
 void create_n_reducers (int, pid_t*, char*, char*, char*, char**);
+
+void *create_n_threads (int, pthread_t*, void*, void*);
 
 #endif // _PROC_UTILS_H_INCLUDED

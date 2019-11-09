@@ -1,9 +1,9 @@
 #include "proc_utils.h"
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/shm.h>
 #include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
 
 void create_n_shmem (int n, char *path, long *shmem_ids, int flag) {
     for (int i = 0; i < n; ++i) {
@@ -54,4 +54,12 @@ void create_n_reducers (int n, pid_t *container, char *path, char *name, char *p
             exit(0);
         }
     }
+}
+
+void *create_n_threads (int n, pthread_t *container, void *func, void *args) {
+    for (int i = 0; i < n; i++)
+        if (0 < pthread_create((container + i), NULL, func, args)) {
+            printf("There was an error creating the threads.\n");
+            exit(1);
+        }
 }

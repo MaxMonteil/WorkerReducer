@@ -37,9 +37,9 @@ int main (int argc, char **argv) {
 
         // create 3 reducers
         pid_t reducer_pids[REDUCER_AMNT];
-        char proc_amnt_str[12];
+        char proc_amnt_str[MAX_INT];
         char *targets[REDUCER_AMNT] = { "CMPS", "CCE", "ECE" };
-        snprintf(proc_amnt_str, 12, "%d", proc_amnt);
+        snprintf(proc_amnt_str, MAX_INT, "%d", proc_amnt);
         create_n_reducers(REDUCER_AMNT, reducer_pids, "./reducer", "reducer", proc_amnt_str, targets);
 
         for (i = 0; i < proc_amnt; i++) waitpid(worker_pids[i], NULL, 0);
@@ -48,8 +48,8 @@ int main (int argc, char **argv) {
         remove_n_shmem(proc_amnt, shmem_ids);
         exit(0);
     } else { // split the text file
-        char part_len_str[12];
-        snprintf(part_len_str, 12, "%d", (file_len(IN_NAME) / proc_amnt));
+        char part_len_str[MAX_INT];
+        snprintf(part_len_str, MAX_INT, "%d", (file_len(IN_NAME) / proc_amnt));
         execlp("split", "split", "-l", part_len_str, "-a", "1", "-d", IN_NAME, OUT_NAME, (char *) NULL);
         exit(0);
     }

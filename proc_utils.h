@@ -3,6 +3,7 @@
 
 #include <sys/types.h>
 #include "structs.h"
+#include "definitions.h"
 
 void create_n_shmem (int, char*, long*, int);
 void attach_n_shmem (int, long*, count_result**);

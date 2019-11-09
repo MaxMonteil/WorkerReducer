@@ -34,8 +34,8 @@ void create_n_workers (int n, pid_t *container, char *path, char *name) {
         }
 
         if (*(container + i) == 0) {
-            char proc_num[12];
-            snprintf(proc_num, 12, "%d", i); // pass the process count
+            char proc_num[MAX_INT];
+            snprintf(proc_num, MAX_INT, "%d", i); // pass the process count
             execlp(path, name, proc_num, NULL);
             exit(0);
         }

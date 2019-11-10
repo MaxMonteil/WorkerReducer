@@ -1,11 +1,12 @@
-#include <sys/wait.h>
-#include <sys/shm.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
-
 #include "main.h"
+
+#include <errno.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/shm.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 int main (int argc, char **argv) {
     int i, proc_amnt = 4;
@@ -28,24 +29,43 @@ int main (int argc, char **argv) {
     if (pid > 0) { // parent process
         waitpid(pid, NULL, 0); // wait for split to be done
 
-        long shmem_ids[proc_amnt];
-        create_n_shmem(proc_amnt, IN_NAME, shmem_ids, IPC_CREAT | 0666);
-
         // create N workers
-        pid_t worker_pids[proc_amnt];
-        create_n_workers(proc_amnt, worker_pids, "./worker", "worker");
+        pthread_t worker_ids[proc_amnt];
+        int thread_ids[proc_amnt];
+        worker_data = malloc(proc_amnt * sizeof(count_result));
+        for (i = 0; i < proc_amnt; i++) {
+            thread_ids[i] = i;
 
-        // create 3 reducers
-        pid_t reducer_pids[REDUCER_AMNT];
-        char proc_amnt_str[MAX_INT];
-        char *targets[REDUCER_AMNT] = { "CMPS", "CCE", "ECE" };
-        snprintf(proc_amnt_str, MAX_INT, "%d", proc_amnt);
-        create_n_reducers(REDUCER_AMNT, reducer_pids, "./reducer", "reducer", proc_amnt_str, targets);
+            if (0 < pthread_create((worker_ids + i), NULL, worker_func, (thread_ids + i))) {
+                printf("There was an error creating the worker threads.\n");
+                exit(1);
+            }
+        }
+        // Wait for workers
+        for (i = 0; i < proc_amnt; pthread_join(worker_ids[i++], NULL));
 
-        for (i = 0; i < proc_amnt; i++) waitpid(worker_pids[i], NULL, 0);
-        for (i = 0; i < REDUCER_AMNT; i++) waitpid(reducer_pids[i], NULL, 0);
+        pthread_t reducer_ids[proc_amnt];
+        reducer_args reducer_data[REDUCER_AMNT];
+        total_results = &(count_result) { 0, 0, 0 };
+        for (i = 0; i < REDUCER_AMNT; i++) {
+            reducer_data[i] = (reducer_args) { .count = proc_amnt, .target = i };
 
-        remove_n_shmem(proc_amnt, shmem_ids);
+            if (0 < pthread_create(&reducer_ids[i], NULL, reducer_func, (reducer_data + i))) {
+                printf("There was an error creating the threads.\n");
+                exit(1);
+            }
+        }
+        // Wait for reducers
+        for (i = 0; i < REDUCER_AMNT; pthread_join(reducer_ids[i++], NULL));
+
+        printf("total.CMPS %d\n", total_results->CMPS);
+        printf("total.CCE %d\n", total_results->CCE);
+        printf("total.ECE %d\n", total_results->ECE);
+
+        // CLEANUP
+        free(worker_data);
+        // free(total_results);
+
         exit(0);
     } else { // split the text file
         char part_len_str[MAX_INT];

@@ -1,8 +1,10 @@
 #ifndef _MAIN_H_INCLUDED
 #define _MAIN_H_INCLUDED
 
-#include "proc_utils.h"
+#include "worker.h"
+#include "reducer.h"
 #include "definitions.h"
+#include "shared.h"
 
 #define REDUCER_AMNT 3
 

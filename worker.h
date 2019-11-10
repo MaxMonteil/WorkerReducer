@@ -2,7 +2,12 @@
 #define _WORKER_H_INCLUDED
 
 #include "structs.h"
+#include "definitions.h"
+#include "shared.h"
 
-int compare (char*, char**, count_result*);
+#define MAX_TARGET_LEN 5
+
+void *worker_func (void*);
+void compare (char*, char**, count_result*);
 
 #endif // _WORKER_H_INCLUDED

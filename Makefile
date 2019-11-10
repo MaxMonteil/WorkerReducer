@@ -1,15 +1,13 @@
 CC=gcc
 CFLAGS=-I. -Wall
 
-MAIN_DEPS = main.c main.h $(PROC_DEPS)
-WORKER_DEPS = worker.c worker.h structs.h
-REDUCER_DEPS = reducer.c reducer.h $(PROC_DEPS)
-PROC_DEPS =  proc_utils.c proc_utils.h definitions.h
+CMN_DEPS = shared.c shared.h definitions.h structs.h
+MAIN_DEPS = main.c main.h $(CMN_DEPS)
+WORKER_DEPS = worker.c worker.h $(CMN_DEPS)
+REDUCER_DEPS = reducer.c reducer.h $(CMN_DEPS)
 
-run: main worker reducer
-
-main: main.o proc_utils.o
-	$(CC) -o $@ $^ $(CFLAGS)
+main: main.o worker.o reducer.o shared.o
+	$(CC) -o $@ $^ $(CFLAGS) -lpthread
 
 main.o: $(MAIN_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
@@ -20,13 +18,13 @@ worker: worker.o
 worker.o: $(WORKER_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-reducer: reducer.o proc_utils.o
+reducer: reducer.o
 	$(CC) -o $@ $^ $(CFLAGS)
 
 reducer.o: $(REDUCER_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-proc_utils.o: $(PROC_DEPS) structs.h
+shared.o: $(CMN_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 .PHONY: wipe

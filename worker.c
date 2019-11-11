@@ -7,28 +7,31 @@
 #include <string.h>
 #include <sys/shm.h>
 
-void *worker_func (void *thread_id) {
+void *worker_func (void *args) {
     char *targets[] = { "CMPS", "CCE", "ECE" };
-    char FMT_OUT_NAME[FMT_OUT_NAME_LEN];
     FILE *fp;
 
-    // find and open proper file parition
-    snprintf(FMT_OUT_NAME, FMT_OUT_NAME_LEN, "%s%d", OUT_NAME, *((int *) thread_id));
-    if ((fp = fopen(FMT_OUT_NAME, "r")) == NULL) {
-        printf("Unable to open file %s\n", FMT_OUT_NAME);
+    // find and open proper file partion
+    if ((fp = fopen(IN_NAME, "r")) == NULL) {
+        printf("Unable to open file %s\n", IN_NAME);
         exit(1);
     }
+    fseek(fp, ((worker_args *) args)->start, SEEK_SET);
 
     int c, i = 0;
+    int pos = ((worker_args *) args)->start;
     char *word = (char *) malloc(MAX_TARGET_LEN * sizeof(char));
-    while ((c = fgetc(fp)) != EOF) {
-        if (c == ' ' || c == '\n') {
-            *(word + i++) = '\0';
-            compare(word, targets, (worker_data + *((int *) thread_id)));
-            i = 0;
-        } else {
+    while ((c = fgetc(fp)) != EOF && ((worker_args *) args)->end > pos++) {
+        if (c != ' ' && c != '\n') {
             *(word + i++) = (char) c;
+            continue;
         }
+
+        if (i == 0) continue; // ignore spaces at the end of the lines
+
+        *(word + i) = '\0';
+        compare(word, targets, worker_data + ((worker_args *) args)->id);
+        i = 0;
     }
 
     fclose(fp);
@@ -42,6 +45,7 @@ void compare (char *word, char **strings, count_result *result) {
         ++result->CMPS;
     else if (strcmp(word, *(strings + 1)) == 0)
         ++result->CCE;
-    else
+    else {
         ++result->ECE;
+    }
 }

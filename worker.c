@@ -39,9 +39,9 @@ void *worker_func (void *thread_id) {
 
 void compare (char *word, char **strings, count_result *result) {
     if (strcmp(word, *strings) == 0)
-        result->CMPS += 1;
+        ++result->CMPS;
     else if (strcmp(word, *(strings + 1)) == 0)
-        result->CCE += 1;
+        ++result->CCE;
     else
-        result->ECE += 1;
+        ++result->ECE;
 }

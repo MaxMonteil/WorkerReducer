@@ -22,7 +22,7 @@ int main (int argc, char **argv) {
 
     // Analyze input file
     int file_map[proc_amnt + 1];
-    map_file(IN_NAME, file_map, file_len(IN_NAME), proc_amnt);
+    analyze_file(IN_NAME, file_map, proc_amnt);
 
     // create N workers
     pthread_t worker_ids[proc_amnt];
@@ -41,6 +41,7 @@ int main (int argc, char **argv) {
     // Wait for workers
     for (i = 0; i < proc_amnt; pthread_join(worker_ids[i++], NULL));
 
+    // create 3 reducers
     pthread_t reducer_ids[proc_amnt];
     reducer_args reducer_data[REDUCER_AMNT];
     total_results = malloc(sizeof(count_result));
@@ -67,24 +68,33 @@ int main (int argc, char **argv) {
     return 0;
 }
 
-int file_len (char *file_name) {
-    int ch, lines = 0;
+void analyze_file (char *file_name, int *file_map, int part_count) {
+    /* Wrapper function to avoid opening and closing the file twice */
     FILE *fp;
 
-    // count number of lines in file fp
     if ((fp = fopen(file_name, "r")) == NULL) {
         printf("Error opening file %s\n", file_name);
         exit(1);
     }
+
+    map_file(fp, file_name, file_map, file_len(fp, file_name), part_count);
+
+    fclose(fp);
+}
+
+int file_len (FILE *fp, char *file_name) {
+    int ch, lines = 0;
+
+    // count number of lines in file fp
+    rewind(fp);
     while (EOF != (ch = fgetc(fp)))
         if (ch == '\n')
             ++lines;
-    fclose(fp);
 
     return lines;
 }
 
-void map_file(char *file_name, int *file_map, int file_len, int part_count) {
+void map_file (FILE *fp, char *file_name, int *file_map, int file_len, int part_count) {
     /*
      * Because the file lines are of unequal length I can't just fseek to
      * a position obtained from dividing the full length by the part count
@@ -94,21 +104,14 @@ void map_file(char *file_name, int *file_map, int file_len, int part_count) {
      * of each file section.
     */
     int ch, i = 1, lines = 0;
-    FILE *fp;
 
     int part_len = file_len / part_count;
     if (part_len <= 0) exit(1);
 
-    if ((fp = fopen(file_name, "r")) == NULL) {
-        printf("Error opening file %s\n", file_name);
-        exit(1);
-    }
-
+    rewind(fp);
     *file_map = 0;
     while (EOF != (ch = fgetc(fp)))
         if (ch == '\n')
             if (++lines % part_len == 0)
                 *(file_map + i++) = ftell(fp);
-
-    fclose(fp);
 }

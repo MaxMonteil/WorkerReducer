@@ -29,6 +29,8 @@ int main (int argc, char **argv) {
     worker_args worker_arguments[proc_amnt];
     worker_data = malloc(proc_amnt * sizeof(count_result));
     for (i = 0; i < proc_amnt; i++) {
+        // initialize structs
+        *(worker_data + i) = (count_result) { .CMPS = 0, .CCE = 0, .ECE = 0 };
         worker_arguments[i] = (worker_args) { .id = i, .start = file_map[i], .end = file_map[i + 1] };
 
         if (0 < pthread_create((worker_ids + i), NULL, worker_func, (worker_arguments + i))) {

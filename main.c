@@ -93,3 +93,31 @@ int file_len (char *file_name) {
 
     return lines;
 }
+
+void map_file(char *file_name, int *file_map, int file_len, int part_count) {
+    /*
+     * Because the file lines are of unequal length I can't just fseek to
+     * a position obtained from dividing the full length by the part count
+     * it might place the cursor in the middle of a word.
+     *
+     * map_file will fill an array with the byte offset marking the start
+     * of each file section.
+    */
+    int ch, i = 0, lines = 0;
+    FILE *fp;
+
+    int part_len = file_len / part_count;
+
+    if ((fp = fopen(file_name, "r")) == NULL) {
+        printf("Error opening file %s\n", file_name);
+        exit(1);
+    }
+    while (EOF != (ch = fgetc(fp)))
+        if (ch == '\n') {
+            if (lines % part_len == 0) *(file_map + i++) = ftell(fp);
+            ++lines;
+        }
+    *(file_map + i) = ftell(fp);
+
+    fclose(fp);
+}

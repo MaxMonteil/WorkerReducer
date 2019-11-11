@@ -9,5 +9,6 @@
 #define REDUCER_AMNT 3
 
 int file_len (char*);
+void map_file(char*, int*, int, int);
 
 #endif // _MAIN_H_INCLUDED

@@ -21,6 +21,11 @@ void *worker_func (void *args) {
     int c, i = 0;
     int pos = ((worker_args *) args)->start;
     char *word = (char *) malloc(MAX_TARGET_LEN * sizeof(char));
+    if (word == NULL) {
+        printf("Error: Unable to allocate memory.\n");
+        exit(1);
+    }
+
     while ((c = fgetc(fp)) != EOF && ((worker_args *) args)->end > pos++) {
         if (c != ' ' && c != '\n') {
             *(word + i++) = (char) c;

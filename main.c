@@ -24,12 +24,17 @@ int main (int argc, char **argv) {
     int file_map[proc_amnt + 1];
     analyze_file(IN_NAME, file_map, proc_amnt);
 
-    // create N workers
+    // Create N workers
+    // Allocating global shared variable
+    worker_data = malloc(proc_amnt * sizeof(count_result));
+    if (worker_data == NULL) {
+        printf("Error: Unable to allocate memory.\n");
+        exit(1);
+    }
+
     pthread_t worker_ids[proc_amnt];
     worker_args worker_arguments[proc_amnt];
-    worker_data = malloc(proc_amnt * sizeof(count_result));
     for (i = 0; i < proc_amnt; i++) {
-        // initialize structs
         *(worker_data + i) = (count_result) { .CMPS = 0, .CCE = 0, .ECE = 0 };
         worker_arguments[i] = (worker_args) { .id = i, .start = file_map[i], .end = file_map[i + 1] };
 
@@ -38,13 +43,18 @@ int main (int argc, char **argv) {
             exit(1);
         }
     }
-    // Wait for workers
-    for (i = 0; i < proc_amnt; pthread_join(worker_ids[i++], NULL));
+    for (i = 0; i < proc_amnt; pthread_join(worker_ids[i++], NULL)); // Wait for workers
 
-    // create 3 reducers
+    // Create 3 reducers
+    // Allocating global shared variable
+    total_results = malloc(sizeof(count_result));
+    if (total_results == NULL) {
+        printf("Error: Unable to allocate memory.\n");
+        exit(1);
+    }
+
     pthread_t reducer_ids[proc_amnt];
     reducer_args reducer_data[REDUCER_AMNT];
-    total_results = malloc(sizeof(count_result));
     *total_results = (count_result) { 0, 0, 0 };
     for (i = 0; i < REDUCER_AMNT; i++) {
         reducer_data[i] = (reducer_args) { .count = proc_amnt, .target = i };
@@ -54,8 +64,7 @@ int main (int argc, char **argv) {
             exit(1);
         }
     }
-    // Wait for reducers
-    for (i = 0; i < REDUCER_AMNT; pthread_join(reducer_ids[i++], NULL));
+    for (i = 0; i < REDUCER_AMNT; pthread_join(reducer_ids[i++], NULL)); // Wait for reducers
 
     printf("total.CMPS %d\n", total_results->CMPS);
     printf("total.CCE %d\n", total_results->CCE);

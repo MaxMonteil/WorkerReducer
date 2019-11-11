@@ -46,7 +46,8 @@ int main (int argc, char **argv) {
 
         pthread_t reducer_ids[proc_amnt];
         reducer_args reducer_data[REDUCER_AMNT];
-        total_results = &(count_result) { 0, 0, 0 };
+        total_results = malloc(sizeof(count_result));
+        *total_results = (count_result) { 0, 0, 0 };
         for (i = 0; i < REDUCER_AMNT; i++) {
             reducer_data[i] = (reducer_args) { .count = proc_amnt, .target = i };
 
@@ -64,7 +65,7 @@ int main (int argc, char **argv) {
 
         // CLEANUP
         free(worker_data);
-        // free(total_results);
+        free(total_results);
 
         exit(0);
     } else { // split the text file

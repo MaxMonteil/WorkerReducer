@@ -10,7 +10,5 @@
 #define REDUCER_AMNT 3
 
 void analyze_file (char*, int*, int);
-int file_len (FILE*, char*);
-void map_file (FILE*, char*, int*, int, int);
 
 #endif // _MULTI_MAIN_H_INCLUDED

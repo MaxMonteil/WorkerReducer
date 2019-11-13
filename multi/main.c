@@ -74,7 +74,7 @@ int main (int argc, char **argv) {
 }
 
 void analyze_file (char *file_name, int *file_map, int part_count) {
-    /* Wrapper function to avoid opening and closing the file twice */
+    int ch, i = 1, lines = 0;
     FILE *fp;
 
     if ((fp = fopen(file_name, "r")) == NULL) {
@@ -82,41 +82,28 @@ void analyze_file (char *file_name, int *file_map, int part_count) {
         exit(1);
     }
 
-    map_file(fp, file_name, file_map, file_len(fp, file_name), part_count);
-
-    fclose(fp);
-}
-
-int file_len (FILE *fp, char *file_name) {
-    int ch, lines = 0;
-
     // count number of lines in file fp
-    rewind(fp);
     while (EOF != (ch = fgetc(fp)))
         if (ch == '\n')
             ++lines;
 
-    return lines;
-}
-
-void map_file (FILE *fp, char *file_name, int *file_map, int file_len, int part_count) {
-    /*
-     * Because the file lines are of unequal length I can't just fseek to
-     * a position obtained from dividing the full length by the part count
-     * it might place the cursor in the middle of a word.
-     *
-     * map_file will fill an array with the byte offset marking the start
-     * of each file section.
-    */
-    int ch, i = 1, lines = 0;
-
-    int part_len = file_len / part_count;
+    int part_len = lines / part_count;
     if (part_len <= 0) exit(1);
 
+    /*
+     * Because the file lines are of unequal length I can't just fseek to
+     * a position obtained from dividing the full length by the part count,
+     * it might place the cursor in the middle of a word.
+     *
+     * this will fill an array with the byte offset marking the start
+     * of each file section.
+    */
     rewind(fp);
-    *file_map = 0;
+    *file_map = lines = 0;
     while (EOF != (ch = fgetc(fp)))
         if (ch == '\n')
             if (++lines % part_len == 0)
                 *(file_map + i++) = ftell(fp);
+
+    fclose(fp);
 }

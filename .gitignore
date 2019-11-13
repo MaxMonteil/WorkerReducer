@@ -4,6 +4,8 @@ tags
 input.txt
 *.o
 main
+run_procs
+run_multi
 worker
 reducer
 output*

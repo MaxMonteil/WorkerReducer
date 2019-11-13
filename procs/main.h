@@ -1,5 +1,5 @@
-#ifndef _MAIN_H_INCLUDED
-#define _MAIN_H_INCLUDED
+#ifndef _PROCS_MAIN_H_INCLUDED
+#define _PROCS_MAIN_H_INCLUDED
 
 #include "proc_utils.h"
 #include "definitions.h"
@@ -8,4 +8,4 @@
 
 int file_len (char*);
 
-#endif // _MAIN_H_INCLUDED
+#endif // _PROCS_MAIN_H_INCLUDED

@@ -1,5 +1,5 @@
-#ifndef _PROC_UTILS_H_INCLUDED
-#define _PROC_UTILS_H_INCLUDED
+#ifndef _PROCS_UTILS_H_INCLUDED
+#define _PROCS_UTILS_H_INCLUDED
 
 #include <sys/types.h>
 #include "structs.h"
@@ -11,4 +11,4 @@ void remove_n_shmem (int, long*);
 void create_n_workers (int, pid_t*, char*, char*);
 void create_n_reducers (int, pid_t*, char*, char*, char*, char**);
 
-#endif // _PROC_UTILS_H_INCLUDED
+#endif // _PROCS_UTILS_H_INCLUDED

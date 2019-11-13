@@ -7,7 +7,7 @@ WORKER_DEPS = worker.c worker.h $(CMN_DEPS)
 REDUCER_DEPS = reducer.c reducer.h $(CMN_DEPS)
 
 main: main.o worker.o reducer.o shared.o
-	$(CC) -o $@ $^ $(CFLAGS) -lpthread
+	$(CC) -o run_multi $^ $(CFLAGS) -lpthread
 
 main.o: $(MAIN_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
@@ -29,7 +29,7 @@ shared.o: $(CMN_DEPS)
 
 .PHONY: wipe
 wipe:
-	@rm -f *.o main worker reducer output*
+	@rm -f *.o run_multi worker reducer output*
 
 .PHONY: clean
 clean:

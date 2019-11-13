@@ -29,10 +29,10 @@ reducer.o: $(REDUCER_DEPS)
 proc_utils.o: $(PROC_DEPS) structs.h
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-.PHONY: wipe
-wipe:
-	@rm -f *.o run_procs worker reducer output*
-
 .PHONY: clean
 clean:
+	@rm -f *.o run_procs worker reducer output*
+
+.PHONY: fresh
+fresh:
 	@rm -f output*

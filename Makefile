@@ -27,10 +27,6 @@ reducer.o: $(REDUCER_DEPS)
 shared.o: $(CMN_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-.PHONY: wipe
-wipe:
-	@rm -f *.o run_multi worker reducer output*
-
 .PHONY: clean
 clean:
-	@rm -f output*
+	@rm -f *.o run_multi

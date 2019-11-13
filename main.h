@@ -1,7 +1,7 @@
 #ifndef _MAIN_H_INCLUDED
 #define _MAIN_H_INCLUDED
 
-#define NUM_OF_TESTS 5
+#define NUM_OF_TESTS 3
 #define PROCS_NAME "procs"
 #define MULTI_NAME "multi"
 #define PROCS_PATH "./" PROCS_NAME "/run_procs"

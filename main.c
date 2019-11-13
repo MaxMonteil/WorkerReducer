@@ -9,7 +9,7 @@
 
 int main (int argc, char **argv) {
     int i, err;
-    char *test_values[NUM_OF_TESTS] = { "1", "2", "4", "6", "8" };
+    char *test_values[NUM_OF_TESTS] = { "1", "4", "8" };
     clock_t start, end;
     pid_t test_process_ids[NUM_OF_TESTS];
     double process_times[NUM_OF_TESTS], threaded_times[NUM_OF_TESTS];

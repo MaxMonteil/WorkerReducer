@@ -66,10 +66,6 @@ int main (int argc, char **argv) {
     }
     for (i = 0; i < REDUCER_AMNT; pthread_join(reducer_ids[i++], NULL)); // Wait for reducers
 
-    printf("total.CMPS %d\n", total_results->CMPS);
-    printf("total.CCE %d\n", total_results->CCE);
-    printf("total.ECE %d\n", total_results->ECE);
-
     // CLEANUP
     free(worker_data);
     free(total_results);

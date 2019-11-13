@@ -25,13 +25,6 @@ int main (int argc, char **argv) {
             total.ECE += results[i]->ECE;
     }
 
-    if (0 == strcmp(argv[2], "CMPS"))
-        printf("total.CMPS %ld\n", total.CMPS);
-    else if (0 == strcmp(argv[2], "CCE"))
-        printf("total.CCE %ld\n", total.CCE);
-    else
-        printf("total.ECE %ld\n", total.ECE);
-
     detach_n_shmem(proc_amnt, results);
 
     return 0;

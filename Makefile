@@ -9,7 +9,7 @@ PROC_DEPS =  proc_utils.c proc_utils.h definitions.h
 run: main worker reducer
 
 main: main.o proc_utils.o
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -o run_procs $^ $(CFLAGS)
 
 main.o: $(MAIN_DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
@@ -31,7 +31,7 @@ proc_utils.o: $(PROC_DEPS) structs.h
 
 .PHONY: wipe
 wipe:
-	@rm -f *.o main worker reducer output*
+	@rm -f *.o run_procs worker reducer output*
 
 .PHONY: clean
 clean:

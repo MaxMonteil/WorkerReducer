@@ -29,4 +29,4 @@ shared.o: $(CMN_DEPS)
 
 .PHONY: clean
 clean:
-	@rm -f *.o run_multi
+	rm -f *.o run_multi

@@ -31,8 +31,8 @@ proc_utils.o: $(PROC_DEPS) structs.h
 
 .PHONY: clean
 clean:
-	@rm -f *.o run_procs worker reducer output*
+	rm -f *.o run_procs worker reducer output*
 
 .PHONY: fresh
 fresh:
-	@rm -f output*
+	rm -f output*

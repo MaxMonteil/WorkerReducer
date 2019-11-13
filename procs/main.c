@@ -1,11 +1,11 @@
+#include "main.h"
+
 #include <sys/wait.h>
 #include <sys/shm.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
-
-#include "main.h"
 
 int main (int argc, char **argv) {
     int i, proc_amnt = 4;

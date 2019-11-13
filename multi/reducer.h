@@ -1,5 +1,5 @@
-#ifndef _REDUCER_H_INCLUDED
-#define _REDUCER_H_INCLUDED
+#ifndef _MULTI_REDUCER_H_INCLUDED
+#define _MULTI_REDUCER_H_INCLUDED
 
 #include "structs.h"
 #include "definitions.h"
@@ -7,4 +7,4 @@
 
 void *reducer_func (void*);
 
-#endif // _REDUCER_H_INCLUDED
+#endif // _MULTI_REDUCER_H_INCLUDED

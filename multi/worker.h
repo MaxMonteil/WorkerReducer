@@ -1,5 +1,5 @@
-#ifndef _WORKER_H_INCLUDED
-#define _WORKER_H_INCLUDED
+#ifndef _MULTI_WORKER_H_INCLUDED
+#define _MULTI_WORKER_H_INCLUDED
 
 #include "structs.h"
 #include "definitions.h"
@@ -10,4 +10,4 @@
 void *worker_func (void*);
 void compare (char*, char**, count_result*);
 
-#endif // _WORKER_H_INCLUDED
+#endif // _MULTI_WORKER_H_INCLUDED

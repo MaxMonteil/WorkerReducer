@@ -1,5 +1,5 @@
-#ifndef _STRUCTS_H_INCLUDED
-#define _STRUCTS_H_INCLUDED
+#ifndef _MULTI_STRUCTS_H_INCLUDED
+#define _MULTI_STRUCTS_H_INCLUDED
 
 typedef enum target { CMPS, CCE, ECE } Target;
 
@@ -20,4 +20,4 @@ typedef struct ReducerArgs {
     Target target;
 } reducer_args;
 
-#endif // _STRUCTS_H_INCLUDED
+#endif // _MULTI_STRUCTS_H_INCLUDED

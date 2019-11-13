@@ -1,5 +1,5 @@
-#ifndef _MAIN_H_INCLUDED
-#define _MAIN_H_INCLUDED
+#ifndef _MULTI_MAIN_H_INCLUDED
+#define _MULTI_MAIN_H_INCLUDED
 
 #include "worker.h"
 #include "reducer.h"
@@ -13,4 +13,4 @@ void analyze_file (char*, int*, int);
 int file_len (FILE*, char*);
 void map_file (FILE*, char*, int*, int, int);
 
-#endif // _MAIN_H_INCLUDED
+#endif // _MULTI_MAIN_H_INCLUDED

@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-I. -Wall
 
-RESULTS_FILE=bench.txt
+RESULTS_FILE=bench
 
 run: main multi procs
 
@@ -31,4 +31,4 @@ clean_procs:
 
 .PHONY: fresh
 fresh:
-	rm -f output* $(RESULTS_FILE) && $(MAKE) -C procs fresh
+	rm -f output* $(RESULTS_FILE).txt $(RESULTS_FILE).ps $(RESULTS_FILE).pdf && $(MAKE) -C procs fresh

@@ -59,11 +59,19 @@ int main (int argc, char **argv) {
         }
     }
 
-    for (i = 0; i < NUM_OF_TESTS; i++) {
-        printf("\nTime taken for %s splits:\n", test_values[i]);
-        printf("\tProcesses: %f\n", process_times[i]);
-        printf("\tThreading: %f\n\n", threaded_times[i]);
+    FILE *fp;
+    printf("Writing results to file: %s\n", RESULTS_FILE);
+
+    if ((fp = fopen(RESULTS_FILE, "w")) == NULL) {
+        printf("Unable to open the file %s for writing.\n", RESULTS_FILE);
+        exit(1);
     }
+
+    fprintf(fp, "# splits\texecute times1\t\texecute times2\n");
+    for (i = 0; i < NUM_OF_TESTS; i++)
+        fprintf(fp, "%s\t\t%f\t\t%f\n", test_values[i], process_times[i], threaded_times[i]);
+
+    fclose(fp);
 
     return 0;
 }

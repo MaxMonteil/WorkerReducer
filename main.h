@@ -6,5 +6,6 @@
 #define MULTI_NAME "multi"
 #define PROCS_PATH "./" PROCS_NAME "/run_procs"
 #define MULTI_PATH "./" MULTI_NAME "/run_multi"
+#define RESULTS_FILE "bench.txt"
 
 #endif // _MAIN_H_INCLUDED

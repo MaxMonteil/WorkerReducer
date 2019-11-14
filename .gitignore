@@ -9,3 +9,4 @@ run_multi
 worker
 reducer
 output*
+bench.*

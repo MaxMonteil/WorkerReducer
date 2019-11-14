@@ -73,5 +73,32 @@ int main (int argc, char **argv) {
 
     fclose(fp);
 
+    pid_t pid;
+    printf("Plotting the results...");
+    if ((pid = fork()) == -1) {
+        printf("Error creating fork\n");
+        exit(1);
+    }
+
+    if (pid == 0) { // child process
+        execlp("gnuplot", "gnuplot", "plot", NULL);
+        exit(0);
+    }
+    wait(NULL);
+    printf("\t\tDone!\n");
+
+    printf("Converting results to a pdf...");
+    if ((pid = fork()) == -1) {
+        printf("Error creating fork\n");
+        exit(1);
+    }
+
+    if (pid == 0) { // child process
+        execlp("ps2pdf", "ps2pdf", "bench.ps", NULL);
+        exit(0);
+    }
+    wait(NULL);
+    printf("\t\tDone!\n");
+
     return 0;
 }
